@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/24983472/README.md)
 # eyxp-webapi
 
 Eine kleine, portable Web-API in C (HTTP/1.1) mit einfachem Router (Method + Path), Text- und JSON-Responses und möglichst wenig Abhängigkeiten.
