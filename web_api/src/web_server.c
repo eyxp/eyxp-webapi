@@ -85,8 +85,6 @@ socket_t setup_socket() {
         sockets_cleanup();
         return 1;
     }
-    log_sock("created listen", s);
-
 
     constexpr int yes = 1;
 #ifdef _WIN32
