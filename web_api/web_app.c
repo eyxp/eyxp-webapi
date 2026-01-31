@@ -1,5 +1,5 @@
 /*
- * library
+ * web_app
  *
  * Author: eyxp
  * GitHub: https://github.com/eyxp
@@ -7,10 +7,9 @@
  *
  * SPDX-License-Identifier: MIT
  */
-#ifndef EYXP_WEBAPI_LIBRARY_H
-#define EYXP_WEBAPI_LIBRARY_H
 
-void hello(void);
+#include "web_app.h"
 
-
-#endif //EYXP_WEBAPI_LIBRARY_H
+eyxp_app_t initApp(void) {
+    return (eyxp_app_t){0};
+}
