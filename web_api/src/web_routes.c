@@ -29,7 +29,6 @@ void register_route(eyxp_app_t *app,
     r->path[sizeof(r->path) - 1] = '\0';
     r->handler = handler;
 
-    // optional: Parameter-Namen aus /x/:id sammeln (strtok-frei)
     const char *pos = path_pattern;
     while (*pos == '/') pos++;
     while (*pos && r->param_count < EYXP_MAX_ROUTE_PARAMS) {
