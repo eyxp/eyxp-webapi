@@ -33,7 +33,6 @@ void response_text(eyxp_http_response_t* response,
 {
     if (!response) return;
 
-    // optional: alles nullen, aber dann brauchst du vollständigen Typ (haben wir jetzt)
     memset(response, 0, sizeof(*response));
 
     response->status = status;
