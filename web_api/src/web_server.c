@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include "web_server.h"
-#include "web_api.h"     // für request/response + http_parse_request/http_send_response/app_handle
+#include "web_api.h"    
 #include <string.h>
 
 #ifdef _WIN32
