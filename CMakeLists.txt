@@ -4,4 +4,7 @@ project(eyxp_webapi C)
 set(CMAKE_C_STANDARD 23)
 
 add_subdirectory(web_api)
-add_subdirectory(web_tests)
+
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/web_tests/CMakeLists.txt")
+    add_subdirectory(web_tests)
+endif ()
