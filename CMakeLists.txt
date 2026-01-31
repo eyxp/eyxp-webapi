@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.20)
 project(eyxp_webapi C)
 
 set(CMAKE_C_STANDARD 23)
 
-add_library(eyxp_webapi STATIC library.c)
+add_subdirectory(web_api)
+add_subdirectory(web_tests)
