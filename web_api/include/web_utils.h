@@ -1,5 +1,5 @@
 /*
- * web_utils
+* web_utils
  *
  * Author: eyxp
  * GitHub: https://github.com/eyxp
@@ -9,11 +9,25 @@
  */
 #ifndef EYXP_WEBAPI_WEB_UTILS_H
 #define EYXP_WEBAPI_WEB_UTILS_H
+
 #include <stddef.h>
+#include "socket_platform.h"
 
-char* find_header_end(const char* string);
-int starts_with_ci(const char* string, const char* prefix);
-size_t parse_content_length(const char* header_start);
-int send_all(socket_t socket, const char* buffer, size_t length);
+#ifdef __cplusplus
+extern "C" {
 
-#endif //EYXP_WEBAPI_WEB_UTILS_H
+#endif
+
+const char *find_header_end(const char *buffer);
+
+int starts_with_ci(const char *string, const char *prefix);
+
+size_t parse_content_length(const char *header_start);
+
+int send_all(socket_t socket, const void *buffer, size_t length);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

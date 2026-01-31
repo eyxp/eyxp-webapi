@@ -73,9 +73,6 @@ void log_sock(const char *tag, socket_t s) {
 }
 
 socket_t setup_socket() {
-#ifdef DEBUG
-    fprintf(stdout, "[DBG] starting...\n"); fflush(stdout);
-#endif
 
     if (sockets_init() != 0) {
         log_wsa_err("WSAStartup");
@@ -131,63 +128,61 @@ socket_t setup_web_server(const socket_t *socket, const int port) {
     return *socket;
 }
 
-void listen_web_server(eyxp_app_t* app, socket_t *socket) {
-    for (;;) {
-        fprintf(stdout, "[DBG] waiting for accept...\n"); fflush(stdout);
+void listen_web_server(eyxp_app_t *app, socket_t *socket) {
+    fflush(stdout);
 
-        const socket_t client = accept(*socket, NULL, NULL);
-        if (client == SOCKET_INVALID) {
-            log_wsa_err("accept");
-            return;
-        }
-        log_sock("accept", client);
+    if (listen(*socket, 16) < 0) {
+        log_wsa_err("listen");
+        return;
+    }
 
-        char buffer[8192];
-        const int n = recv(client, buffer, sizeof(buffer) - 1, 0);
-        if (n <= 0) {
-            if (n < 0) log_wsa_err("recv");
+    fflush(stdout);
 
-            fprintf(stdout, "[DBG] recv returned %d, closing client\n", n);
+    unsigned long mode = 1;
+    ioctlsocket(*socket, FIONBIO, &mode);
 
-            fflush(stdout);
-            socket_close(client);
-            continue;
-        }
-        buffer[n] = '\0';
-
-        fprintf(stdout, "[DBG] recv bytes=%d\n", n);
+    while (1) {
         fflush(stdout);
 
-        eyxp_http_request_t request;
-        const int result = http_parse_request(buffer, &request);
+        socket_t client = accept(*socket, NULL, NULL);
+        int err = socket_last_error();
+        fflush(stdout);
 
-        if (result != 0) {
-            const char *bad =
-                    "HTTP/1.1 400 Bad Request\r\n"
-                    "Content-Length: 12\r\n"
-                    "Connection: close\r\n"
-                    "\r\n"
-                    "Bad Request\n";
-
-            const int sn = send(client, bad, (int) strlen(bad), 0);
-            fprintf(stdout, "[DBG] sent 400 bytes=%d\n", sn);
-            if (sn < 0) log_wsa_err("send(400)");
-            fflush(stdout);
-
-            socket_close(client);
+        if (client == INVALID_SOCKET) {
+            if (err != WSAEWOULDBLOCK && err != EWOULDBLOCK) {
+                log_wsa_err("accept");
+            }
+            Sleep(10); // CPU schonen
             continue;
         }
 
-        eyxp_http_response_t response;
-        app_handle(app, &request, &response);
-
-        fprintf(stdout, "[DBG] before http_send_response\n");
-        fflush(stdout);
-        const int res = http_send_response(client, &response);
         fflush(stdout);
 
-        if (res != 0) {
-            fprintf(stderr, "[ERR] http_send_response failed, sockerr=%d\n", (int) socket_last_error());
+        char recv_buf[2048] = {0};
+        const int recv_len = recv(client, recv_buf, sizeof(recv_buf) - 1, 0);
+        fflush(stdout);
+
+        if (recv_len <= 0) {
+            closesocket(client);
+            continue;
         }
+
+        fflush(stdout);
+
+        eyxp_http_request_t req = {0};
+        eyxp_http_response_t res = {0};
+
+        if (http_parse_request(recv_buf, &req) == 0) {
+            fflush(stdout);
+            app_handle(app, &req, &res);
+        } else {
+            response_text(&res, 400, "Bad Request", "Parse error\n");
+        }
+
+        fflush(stdout);
+        http_send_response(client, &res);
+
+        closesocket(client);
+        fflush(stdout);
     }
 }

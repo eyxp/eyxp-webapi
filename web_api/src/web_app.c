@@ -10,6 +10,6 @@
 
 #include "web_app.h"
 
-eyxp_app_t initApp(void) {
+eyxp_app_t eyxp_app_init(void) {
     return (eyxp_app_t){0};
 }
