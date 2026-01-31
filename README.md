@@ -48,15 +48,14 @@ void root_handler2(const eyxp_http_request_t *request, eyxp_http_response_t *res
 }
 
 int main(void) {
-    eyxp_app_t app = eyxp_app_init();
-    const socket_t sock = setup_socket();
-    const socket_t server = setup_web_server(&sock, 8080);
-
-
-    register_route(&app, "GET", "/", root_handler2);
-    register_route(&app, "GET", "/:id/:name", root_handler);
-    listen_web_server(&app, (socket_t*)&server);
-    return 0;
+    eyxp_app_t app = eyxp_app_init(); // creates an new app instance
+    const socket_t sock = setup_socket(); // setups client socket
+    const socket_t server = setup_web_server(&sock, 8080); // add socket adress and configuration
+    
+    register_route(&app, "GET", "/", root_handler2); // registern an rout for /
+    register_route(&app, "GET", "/:id/:name", root_handler); // registern and route for /id/name
+    listen_web_server(&app, (socket_t*)&server); // listen for incoming request
+    return 0; 
 }
 
 
