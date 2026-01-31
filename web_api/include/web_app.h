@@ -15,6 +15,8 @@
 #include <stddef.h>
 #include "web_routes.h"
 
+#define EYXP_ROUTE_MAX 64
+
 typedef struct eyxp_app {
     eyxp_route_t routes[EYXP_ROUTE_MAX];
     size_t count;

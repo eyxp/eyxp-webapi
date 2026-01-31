@@ -44,7 +44,7 @@ void app_handle(const eyxp_app_t* app, const eyxp_http_request_t* request, eyxp_
             return;
         }
     }
-    response_text(response, 404, "Not Found", TEXT_PLAIN_UFT8, nullptr);
+    response_text(response, 404, "Not Found",nullptr);
 }
 
 int http_send_response(const socket_t socket, const eyxp_http_response_t* response) {

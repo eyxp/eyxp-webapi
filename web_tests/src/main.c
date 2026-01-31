@@ -14,7 +14,7 @@
 
 void root_handler(const eyxp_http_request_t *req, eyxp_http_response_t *res) {
     (void) req;
-    response_text(res, 200, "OK", TEXT_PLAIN_UFT8, "hi\n");
+    response_json(res, 200, "OK", "{\"status\":\"ok\"}\n");
 }
 
 int main(void) {
@@ -24,5 +24,6 @@ int main(void) {
     const socket_t webServer = setup_web_server(&webSocket, 8080);
 
     register_route(&app, "GET", "/", root_handler);
+    register_route(&app, "POST", "/", root_handler);
     listen_web_server(&app, (socket_t*) &webServer);
 }
